@@ -1,5 +1,5 @@
 
-import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, InterstitialAdOptions } from '@capacitor-community/admob';
+import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition } from '@capacitor-community/admob';
 
 export class AdMobService {
   private static readonly BANNER_AD_ID = 'ca-app-pub-8168731240539272/8413732470';
@@ -8,7 +8,6 @@ export class AdMobService {
   static async initialize() {
     try {
       await AdMob.initialize({
-        requestTrackingAuthorization: true,
         testingDevices: ['YOUR_DEVICE_ID_HERE'], // Add your device ID for testing
         initializeForTesting: false,
       });
@@ -45,7 +44,7 @@ export class AdMobService {
   }
 
   static async showInterstitialAd() {
-    const options: InterstitialAdOptions = {
+    const options = {
       adId: this.BANNER_AD_ID, // Using same ID, you can create separate interstitial ad ID
       isTesting: false,
     };
