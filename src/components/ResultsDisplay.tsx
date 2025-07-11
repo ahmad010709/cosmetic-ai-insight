@@ -1,10 +1,11 @@
-
 import { ArrowLeft, Star, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { AnalysisResult } from "@/types/cosmetics";
+import { useAdMob } from "@/hooks/useAdMob";
+import { useEffect } from "react";
 
 interface ResultsDisplayProps {
   result: AnalysisResult;
@@ -12,6 +13,19 @@ interface ResultsDisplayProps {
 }
 
 const ResultsDisplay = ({ result, onReset }: ResultsDisplayProps) => {
+  const { showInterstitialAd, hideBannerAd, isNative, isInitialized } = useAdMob();
+
+  // Hide banner ad on results page and show interstitial ad
+  useEffect(() => {
+    if (isNative && isInitialized) {
+      hideBannerAd();
+      // Show interstitial ad when results are displayed
+      setTimeout(() => {
+        showInterstitialAd();
+      }, 1000); // Small delay to ensure smooth transition
+    }
+  }, [isNative, isInitialized, hideBannerAd, showInterstitialAd]);
+
   const getRatingColor = (rating: string) => {
     switch (rating) {
       case "safe":

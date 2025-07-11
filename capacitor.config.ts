@@ -14,6 +14,11 @@ const config: CapacitorConfig = {
       launchShowDuration: 2000,
       backgroundColor: '#8B5CF6',
       showSpinner: false
+    },
+    AdMob: {
+      appId: 'ca-app-pub-8168731240539272~1234567890', // Replace with your actual App ID
+      testingDevices: ['YOUR_DEVICE_ID'], // Add your test device IDs
+      initializeForTesting: false
     }
   }
 };

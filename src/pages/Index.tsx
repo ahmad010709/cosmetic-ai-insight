@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Camera, FileText, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,10 +8,26 @@ import ImageAnalyzer from "@/components/ImageAnalyzer";
 import NameAnalyzer from "@/components/NameAnalyzer";
 import { AnalysisResult } from "@/types/cosmetics";
 import ResultsDisplay from "@/components/ResultsDisplay";
+import { useAdMob } from "@/hooks/useAdMob";
 
 const Index = () => {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const { showBannerAd, hideBannerAd, isNative, isInitialized } = useAdMob();
+
+  // Show banner ad when component mounts
+  useEffect(() => {
+    if (isNative && isInitialized) {
+      showBannerAd();
+    }
+
+    // Cleanup: hide banner ad when component unmounts
+    return () => {
+      if (isNative && isInitialized) {
+        hideBannerAd();
+      }
+    };
+  }, [isNative, isInitialized, showBannerAd, hideBannerAd]);
 
   const handleAnalysisComplete = (result: AnalysisResult) => {
     setAnalysisResult(result);
@@ -26,6 +42,10 @@ const Index = () => {
   const handleReset = () => {
     setAnalysisResult(null);
     setIsAnalyzing(false);
+    // Show banner ad again when returning to main screen
+    if (isNative && isInitialized) {
+      showBannerAd();
+    }
   };
 
   if (analysisResult) {
@@ -90,8 +110,8 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* Footer */}
-        <div className="text-center mt-12 text-gray-500 text-sm">
+        {/* Footer - with extra padding for banner ad on mobile */}
+        <div className={`text-center mt-12 text-gray-500 text-sm ${isNative ? 'mb-16' : ''}`}>
           <p>© 2025 Cosmetica AI. All rights reserved.</p>
           <p className="mt-1">Analyze ingredients with the power of AI.</p>
         </div>
